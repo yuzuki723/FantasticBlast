@@ -5,34 +5,35 @@ using UnityEngine;
 public class Stone_Standerd : MonoBehaviour
 {
 
-    ///<summary>
-    ///破壊時の破片プレハブ
-    ///</summary>
-    [SerializeField] GameObject _fragmentPrefab;
+    /// <summary>
+    /// 破片クラス呼び出し用
+    /// </summary>
+    private Fragment _fragment;
 
-    ///<summary>
-    ///飛び散る破片の数
-    ///</summary>
-    [SerializeField] private float _fragmentNumber = 10;
-
-    ///<summary>
-    ///飛び散る破片の速さ
-    ///</summary>
-    [SerializeField] private float _fragmentSpeed = 1;
-
-    ///<summary>
-    ///飛び散る破片が消える時間
-    ///</summary>
-    [SerializeField] private float _fragmentDestroyTime = 1;
-
-    void Start()
+    [SerializeField, Tooltip("破片のステータス")]
+    SetFragmentStatus _fragmentStatus = new SetFragmentStatus();
+    [System.Serializable]
+    public class SetFragmentStatus
     {
-        
-    }
+        /// <summary>
+        /// 破壊時の破片プレハブ
+        /// </summary>
+        public GameObject Prefab;
 
-    void Update()
-    {
-        
+        /// <summary>
+        /// 飛び散る破片の数
+        /// </summary>
+        public float Number;
+
+        /// <summary>
+        /// 飛び散る破片の速さ
+        /// </summary>
+        public float Speed;
+
+        /// <summary>
+        /// 飛び散る破片が消える時間
+        /// </summary>
+        public float DestroyTime;
     }
 
     private void OnCollisionEnter(Collision other)
@@ -42,29 +43,11 @@ public class Stone_Standerd : MonoBehaviour
 
     private void OnDestroy()
     {
-        FlyAroundFragment();
-    }
+        //破片のステータスを加える
+        _fragment = GetComponent<Fragment>();
+        _fragment.SetFragmentStatus(_fragmentStatus.Prefab, _fragmentStatus.Number, _fragmentStatus.Speed, _fragmentStatus.DestroyTime);
 
-    ///<summary>
-    ///周囲に破片をまき散らす
-    ///</summary>
-    private void FlyAroundFragment()
-    {
-        //_fragmentNumberの数分出現する
-        for (int i = 0; i < _fragmentNumber; i++)
-        {
-            //破片をインスタンス(角度はランダムに設定)
-            GameObject fagment = Instantiate(_fragmentPrefab,transform.position,Random.rotation);
-
-            //ランダムな方向ベクトルを取得
-            Vector3 randVec = Random.insideUnitSphere.normalized;
-
-            //ランダムな方向に破片を飛ばす
-            Rigidbody rigidbody = fagment.GetComponent<Rigidbody>();
-            rigidbody.AddForce(randVec * _fragmentSpeed,ForceMode.Impulse);
-
-            //時間になったら消す
-            Destroy(fagment,_fragmentDestroyTime);
-        }
+        //魔法の消滅を分かりやすくするため消滅した座標から破片が飛び散る
+        _fragment.FlyAroundFragment();
     }
 }

@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: -3518354780763272995}
   - component: {fileID: 3007960882999165895}
   - component: {fileID: 8260535666561437797}
+  - component: {fileID: 1117683846478776634}
   m_Layer: 0
   m_Name: Ice
   m_TagString: Untagged
@@ -162,7 +163,20 @@ MonoBehaviour:
   _rotateX: 1000
   _rotateY: 0
   _rotateZ: 0
-  _fragmentPrefab: {fileID: 4223045806122038034, guid: 1feefb882b5f1984c9c8c9f24375bb10, type: 3}
-  _fragmentNumber: 10
-  _fragmentSpeed: 1
-  _fragmentDestroyTime: 1
+  _fragmentStatus:
+    Prefab: {fileID: 4223045806122038034, guid: 1feefb882b5f1984c9c8c9f24375bb10, type: 3}
+    Number: 10
+    Speed: 1
+    DestroyTime: 1
+--- !u!114 &1117683846478776634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6335825333884761379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bf5defb079cf4747a4f48ac87c82db3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

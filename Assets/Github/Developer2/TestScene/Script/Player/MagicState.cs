@@ -11,12 +11,9 @@ namespace MagicState
     {
         //ステート本体
         public ReactiveProperty<MagicState> State { get; set;} = new ReactiveProperty<MagicState>();
-    
-        //通常魔法実行
+
         public void Execute() => State.Value.Execute();
 
-        //特殊魔法実行
-        
     }
 
     ///<summary>

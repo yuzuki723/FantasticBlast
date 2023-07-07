@@ -22,7 +22,7 @@ public class Magic_Fire_Standerd : MonoBehaviour
         m_magicSpeed = 100;
 
     }
-    
+
     public void ShotMagic()
     {
         //右クリックが押させていなかったら早期リターン

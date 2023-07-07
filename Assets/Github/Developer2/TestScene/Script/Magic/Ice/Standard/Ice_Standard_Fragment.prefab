@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1829650351371425457}
   - component: {fileID: 8554554183537229938}
   m_Layer: 0
-  m_Name: Ice_Standard_DestroyEffect
+  m_Name: Ice_Standard_Fragment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
