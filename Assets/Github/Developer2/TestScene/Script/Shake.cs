@@ -54,7 +54,7 @@ public class Shake : MonoBehaviour
             //カウントが偶数の時は位置を変更・奇数の時は初期位置に戻す
             Vector3 randomPos = Vector3.zero;
             if (_shakeCount % 2 == 0)
-            {    
+            {
                 _randomPosition.x = Random.Range(-_shakePower,_shakePower);
                 _randomPosition.y = Random.Range(-_shakePower,_shakePower);
                 _randomPosition.z = Random.Range(-_shakePower,_shakePower);
@@ -102,7 +102,7 @@ public class Shake : MonoBehaviour
         _shakePower = 0;
         _initPosition = Vector3.zero;
     }
-    
+
     ///<summary>
     ///揺れの力の数値を調整する(Max:100 Min:1)
     ///</summary>
@@ -114,7 +114,7 @@ public class Shake : MonoBehaviour
         return Mathf.Clamp(power,1,100) / 500;
     }
 
-    
+
 }
 
 
