@@ -14,11 +14,14 @@ public class PlayerSliderHPBer : MonoBehaviour
     [Tooltip("スライダーを入れる")]
     private Slider m_slider;
 
+    private bool m_magicCircleRecoveryFlg; //プレイヤーが魔法陣で回復したかを判断するフラグ
+
     // Start is called before the first frame update
     private void Start()
     {
         m_slider.value = 1; //スライダーをマックスにする
         m_playerCurrentHP = m_playerMaxHP; //プレイヤーのHP設定
+        m_magicCircleRecoveryFlg = false;
     }
 
     private void OnTriggerEnter(Collider _other)
@@ -46,12 +49,28 @@ public class PlayerSliderHPBer : MonoBehaviour
                     m_playerCurrentHP = m_playerCurrentHP - playerDamage;
                     Debug.Log("ミミックによって" + playerDamage + "ダメージ受けた");
                 }
+                else
+                {
+                    if(m_magicCircleRecoveryFlg == false && _other.CompareTag("HeelMagicCircle")) //当たったものが魔法陣だった場合
+                    {
+                        m_playerCurrentHP = m_playerMaxHP;
+                        Debug.Log("魔法陣で回復  現在のHPは" + m_playerCurrentHP + "です");
+                        m_magicCircleRecoveryFlg = true; //プレイヤーが魔法陣で回復した
+                    }
+                }
             }
         }
 
         if (m_playerCurrentHP <= 0)
         {
             m_playerCurrentHP = 0;
+        }
+        else
+        {
+            if(m_playerCurrentHP >= 500)
+            {
+                m_playerCurrentHP = 500;
+            }
         }
 
         //プレイヤーの最大HPにおける現在のHPをスライダーに反映させる

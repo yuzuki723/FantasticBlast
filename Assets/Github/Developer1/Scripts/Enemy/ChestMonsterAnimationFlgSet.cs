@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class ChestMonsterAnimationFlgSet : MonoBehaviour
 {
-    static bool m_attackOnFlg; //攻撃アニメーションをするかを判断するフラグ
+    static bool m_doNotMoveFlg; //ミミックがIdleアニメーションをしている時でも移動しないように制御するフラグ
 
     // Start is called before the first frame update
     private void Start()
     {
-        m_attackOnFlg = false;
+        m_doNotMoveFlg = false;
     }
 
     // Update is called once per frame
@@ -18,9 +18,9 @@ public class ChestMonsterAnimationFlgSet : MonoBehaviour
         
     }
 
-    public bool AttackOnFlgProperty //セッターとゲッター両方の役割がある関数
+    public bool DoNotMoveFlgProperty //セッターとゲッター両方の役割がある関数
     {
-        get { return m_attackOnFlg; }
-        set { m_attackOnFlg = value; }
+        get { return m_doNotMoveFlg; }
+        set { m_doNotMoveFlg = value; }
     }
 }

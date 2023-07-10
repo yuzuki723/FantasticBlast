@@ -789,7 +789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9cf7481a53327a4bba331539da70719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _standerd: {fileID: 8891095169344910796, guid: 511d59815935c3b4d9eb6ebfb65fd0f6, type: 3}
+  _standerdPrefab: {fileID: 8891095169344910796, guid: 511d59815935c3b4d9eb6ebfb65fd0f6, type: 3}
   _special: {fileID: 9059454640579659194, guid: 7530fece0f6236b49b146126f93ca8e9, type: 3}
   _specialSpeed: 600
 --- !u!54 &1438782610

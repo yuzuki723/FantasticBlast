@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Ice_Standard_Effect : MonoBehaviour
 {
-
+    
 }

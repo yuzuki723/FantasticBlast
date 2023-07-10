@@ -16,16 +16,21 @@ public class ChestMonsterAttack : MonoBehaviour
 
     [SerializeField]
     [Tooltip("ChestMonsterSliderHPBerクラスのインスタンスを入れる")]
-    ChestMonsterSliderHPBer m_chestMonsterSliderHPBer;
+    private ChestMonsterSliderHPBer m_chestMonsterSliderHPBer;
 
-    private NavMeshAgent m_agent;
+    [SerializeField]
+    [Tooltip("GetNavMeshAgentクラスのインスタンスを入れる")]
+    private GetNavMeshAgent m_getNavMeshAgent;
 
+    private GameObject m_player;
     private Animator m_animator;
+    private bool m_attackAnimaOnFlg; //攻撃アニメーションをするかを判断するフラグ(近距離攻撃アニメーション)
 
     private void Start()
     {
-        m_agent = GetComponent<NavMeshAgent>(); //コンポーネントを取得
+        m_attackAnimaOnFlg = false;
         m_animator = GetComponent<Animator>(); //アニメーターコンポーネントを取得
+        m_player = GameObject.Find("Player");
     }
 
     private void Update()
@@ -35,23 +40,13 @@ public class ChestMonsterAttack : MonoBehaviour
             return;
         }
 
-        if (m_chestMonsterAnimationFlgSet.AttackOnFlgProperty) //攻撃アニメーションが出来る状態だった場合
+        //攻撃アニメーションが出来る時 or ミミックが移動してはいけないフラグが立っている時
+        if (m_attackAnimaOnFlg || m_chestMonsterAnimationFlgSet.DoNotMoveFlgProperty)
         {
-            //ミミックを移動させない
-            m_agent.isStopped = true;
-            m_agent.velocity = Vector3.zero; //移動速度を無くす
-        }
-        else
-        {
-            //ミミックを移動させる
-            m_agent.isStopped = false;
+            m_getNavMeshAgent.m_agent.velocity = Vector3.zero; //ミミックを移動させない
         }
 
-        //アニメーション状況を毎フレーム更新する
-        m_animator.SetBool("Attack", m_chestMonsterAnimationFlgSet.AttackOnFlgProperty);
-        //当たり判定状況を毎フレーム更新する
-        m_chestMonsterCollider.SphereColliderProperty.enabled = m_chestMonsterCollider.AttackColliderOnFlgProperty;
-        Debug.Log("当たり判定の状態は" + m_chestMonsterCollider.SphereColliderProperty.enabled + "です(ChestMonsterAttackクラス)");
+        m_animator.SetBool("Attack", m_attackAnimaOnFlg); //近距離攻撃アニメーション
     }
 
     public void OnDetectObject(Collider _collider)
@@ -59,17 +54,16 @@ public class ChestMonsterAttack : MonoBehaviour
         //検知したオブジェクトに「Player」のタグが付いていれば、そのオブジェクトを追いかける
         if (_collider.CompareTag("Player"))
         {
-            m_chestMonsterAnimationFlgSet.AttackOnFlgProperty = true;
+            m_attackAnimaOnFlg = true; //攻撃アニメーションを開始する
         }
     }
 
     //探知範囲からプレイヤーが消えた時に実行する関数
     public void NotDetectObject(Collider _collider)
     {
-        //検知したオブジェクトに「Player」のタグが付いていれば、そのオブジェクトを追いかける
         if (_collider.CompareTag("Player"))
         {
-            m_chestMonsterAnimationFlgSet.AttackOnFlgProperty = true;
+            m_attackAnimaOnFlg = false; //攻撃アニメーションを終了する
         }
     }
 }

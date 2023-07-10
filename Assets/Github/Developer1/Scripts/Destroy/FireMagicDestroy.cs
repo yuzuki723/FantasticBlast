@@ -27,6 +27,6 @@ public class FireMagicDestroy : MonoBehaviour
     public bool ToDoExpFlgProperty //セッターとゲッター両方の役割がある関数
     {
         get { return m_toDoExpFlg; }
-        set { m_toDoExpFlg = value; }
+        set { m_toDoExpFlg = value; }   
     }
 }

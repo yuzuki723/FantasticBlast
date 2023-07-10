@@ -4,14 +4,9 @@ using UnityEngine;
 
 public class ChestMonsterCollider : MonoBehaviour
 {
-    //m_sphereColliderを外側で値を変えれるが、
-    //このクラスではなぜか反映されない
-
     [SerializeField]
     [Tooltip("当たり判定を入れる")]
-    private SphereCollider m_sphereCollider;
-
-    //public SphereCollider m_sphereCollider;
+    private BoxCollider m_boxCollider;
 
     static bool m_attackColliderOnFlg; //攻撃アニメーション時の当たり判定のフラグ
 
@@ -20,20 +15,24 @@ public class ChestMonsterCollider : MonoBehaviour
         m_attackColliderOnFlg = false;
     }
 
+    private void Update()
+    {
+        //攻撃の当たり判定をフラグで制御する
+        if (m_attackColliderOnFlg)
+        {
+            m_boxCollider.enabled = true;
+        }
+        else
+        {
+            m_boxCollider.enabled = false;
+        }
+
+        Debug.Log("現在のフラグの状態は" + m_boxCollider.enabled + "です(ChestMonsterColliderクラス)");
+    }
+
     public bool AttackColliderOnFlgProperty //セッターとゲッター両方の役割がある関数
     {
         get { return m_attackColliderOnFlg; }
         set { m_attackColliderOnFlg = value; }
-    }
-
-    private void Update()
-    {
-        Debug.Log("現在のフラグの状態は" + m_sphereCollider.enabled + "です(ChestMonsterColliderクラス)");
-    }
-
-    public SphereCollider SphereColliderProperty //セッターとゲッター両方の役割がある関数
-    {
-        get { return m_sphereCollider; }
-        set { m_sphereCollider = value; }
     }
 }

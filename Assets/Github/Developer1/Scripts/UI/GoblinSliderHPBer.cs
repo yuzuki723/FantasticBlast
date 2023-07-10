@@ -55,6 +55,7 @@ public class GoblinSliderHPBer : MonoBehaviour
             {
                 m_animator.SetBool("Die", true); //死亡アニメーションを開始する
                 m_agent.isStopped = true; //ゴブリンを倒したので、動きを止める
+                m_agent.velocity = Vector3.zero;
                 Debug.Log(m_agent.isStopped);
                 Destroy(this.gameObject, 2f); //2秒後にゴブリンを削除する
                 Invoke("EffectInstance", 1.7f); //1.7秒後に指定した関数を呼び出して実行する

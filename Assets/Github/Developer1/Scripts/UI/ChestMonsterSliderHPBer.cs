@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class ChestMonsterSliderHPBer : MonoBehaviour
 {
-    //[SerializeField]
-    //[Tooltip("ミミックを倒した時のエフェクトを入れる")]
-    //private GameObject m_deadEffect;
+    [SerializeField]
+    [Tooltip("ミミックを倒した時のエフェクトを入れる")]
+    private GameObject m_deadEffect;
 
-    //[SerializeField]
-    //[Tooltip("ミミックを倒した時のドロップアイテムを入れる")]
-    //private GameObject m_dropItem;
+    [SerializeField]
+    [Tooltip("ミミックを倒した時のドロップアイテムを入れる")]
+    private GameObject m_dropItem;
 
     [SerializeField]
     [Tooltip("GetNavMeshAgentクラスのインスタンスを入れる")]
@@ -56,25 +56,24 @@ public class ChestMonsterSliderHPBer : MonoBehaviour
                 m_animator.SetBool("Die", true); //死亡アニメーションを開始する
                 m_getNavMeshAgent.m_agent.isStopped = true; //ミミックを倒したので、動きを止める
                 Destroy(this.gameObject, 2f); //2秒後にミミックを削除する
-                //Invoke("EffectInstance", 1.7f); //1.7秒後に指定した関数を呼び出して実行する
+                Invoke("EffectInstance", 1.7f); //1.7秒後に指定した関数を呼び出して実行する
                 Debug.Log("ミミックを削除しました");
             }
         }
     }
 
-    //private void EffectInstance()
-    //{
-    //    GameObject effectInstance = Instantiate(m_deadEffect, transform.localPosition + new Vector3(0f, 0.5f, 0.5f), Quaternion.identity);
-    //    Debug.Log("エフェクトを出しました");
-    //    Destroy(effectInstance.gameObject, 2f); //2秒後にエフェクトを削除する
-    //}
+    private void EffectInstance()
+    {
+        GameObject effectInstance = Instantiate(m_deadEffect, transform.localPosition + new Vector3(0f, 0.5f, 0.5f), Quaternion.identity);
+        Destroy(effectInstance.gameObject, 2f); //2秒後にエフェクトを削除する
+    }
 
-    //private void OnDestroy()
-    //{
-    //    //ミミックが消えてからアイテムをドロップする
-    //    Instantiate(m_dropItem, transform.localPosition + new Vector3(0f, 1f, 0.5f), Quaternion.identity);
-    //    Debug.Log("ミミックがアイテムをドロップしました");
-    //}
+    private void OnDestroy()
+    {
+        //ミミックが消えてからアイテムをドロップする
+        Instantiate(m_dropItem, transform.localPosition + new Vector3(0f, 1f, 0.5f), Quaternion.identity);
+        Debug.Log("ミミックがアイテムをドロップしました");
+    }
 
     public int MimicCurrentHPProperty //セッターとゲッター両方の役割がある関数
     {

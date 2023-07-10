@@ -13,7 +13,6 @@ namespace MagicState
         public ReactiveProperty<MagicState> State { get; set;} = new ReactiveProperty<MagicState>();
 
         public void Execute() => State.Value.Execute();
-
     }
 
     ///<summary>

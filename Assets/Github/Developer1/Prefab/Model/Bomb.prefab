@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b012191e563aa94e82132c67210bab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_collisionTerrain: {fileID: 2152274403233448300, guid: a39750996962f294e9252c3c355ed5d8, type: 3}
+  m_toDoExpFlg: 1
 --- !u!1001 &5424507582337088541
 PrefabInstance:
   m_ObjectHideFlags: 0

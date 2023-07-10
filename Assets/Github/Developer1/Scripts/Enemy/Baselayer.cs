@@ -8,15 +8,15 @@ public class Baselayer : StateMachineBehaviour
 {
     [SerializeField]
     [Tooltip("GetNavMeshAgentクラスのインスタンスを入れる")]
-    GetNavMeshAgent m_getNavMeshAgent;
+    private GetNavMeshAgent m_getNavMeshAgent;
 
     [SerializeField]
     [Tooltip("ChestMonsterAnimationFlgSetクラスのインスタンスを入れる")]
-    ChestMonsterAnimationFlgSet m_chestMonsterAnimationFlgSet;
+    private ChestMonsterAnimationFlgSet m_chestMonsterAnimationFlgSet;
 
     [SerializeField]
     [Tooltip("ChestMonsterColliderクラスのインスタンスを入れる")]
-    ChestMonsterCollider m_chestMonsterCollider;
+    private ChestMonsterCollider m_chestMonsterCollider;
 
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -31,6 +31,13 @@ public class Baselayer : StateMachineBehaviour
         {
             m_chestMonsterCollider.AttackColliderOnFlgProperty = true; //当たり判定をONする
         }
+        else
+        {
+            if (stateInfo.IsName("IdleNormal")) //アニメーションのIdleNormalステートを探す
+            {
+                m_chestMonsterAnimationFlgSet.DoNotMoveFlgProperty = true;
+            }
+        }
     }
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
@@ -44,9 +51,14 @@ public class Baselayer : StateMachineBehaviour
         {
             if (stateInfo.IsName("Attack01")) //アニメーションのAttack01ステートを探す
             {
-                m_chestMonsterAnimationFlgSet.AttackOnFlgProperty = false; //一旦攻撃アニメーションから離れる
-
                 m_chestMonsterCollider.AttackColliderOnFlgProperty = false; //当たり判定をfalseする
+            }
+            else
+            {
+                if(stateInfo.IsName("IdleNormal")) //アニメーションのIdleNormalステートを探す
+                {
+                    m_chestMonsterAnimationFlgSet.DoNotMoveFlgProperty = false; //一旦攻撃アニメーションから離れる
+                }
             }
         }
     }

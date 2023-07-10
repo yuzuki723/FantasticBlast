@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChestMonsterAstonish : MonoBehaviour
 {
@@ -8,7 +9,9 @@ public class ChestMonsterAstonish : MonoBehaviour
     [Tooltip("ChestMonsterNoticeableLineクラスのインスタンスを入れる")]
     private ChestMonsterNoticeableLine m_chestMonsterNoticeableLine;
 
-    //private bool m_crossedTheLineFlg; //crossed the line == ライン(ChestMonsterNoticeableLine)を越えた
+    [SerializeField]
+    [Tooltip("キャンバスを入れる")]
+    private GameObject m_canvas;
 
     private Animator m_animator;
 
@@ -23,25 +26,9 @@ public class ChestMonsterAstonish : MonoBehaviour
     {
         if (m_chestMonsterNoticeableLine.CrossedTheLineFlgProperty == true)
         {
-            BeginToMove();
+            Debug.Log("Astonishのフラグ状況は" + m_animator.GetBool("Astonish") + "です");
+            m_animator.SetBool("Astonish", true);
+            m_canvas.SetActive(true); //キャンバスを有効にする
         }
-    }
-
-    public void BeginToMove()
-    {
-        Debug.Log("Astonishのフラグ状況は" + m_animator.GetBool("Astonish") + "です");
-        m_animator.SetBool("Astonish", true);
-
-        //if (m_chestMonsterNoticeableLine.CrossedTheLineFlgProperty == true)
-        //{
-        //プレイヤーを驚かせるアニメーションを開始する
-        //m_animator.SetBool("Astonish", true);
-        //Debug.Log("現在のミミックのフラグは" + m_animator.GetBool("Astonish") + "です");
-        //m_chestMonsterNoticeableLine.CrossedTheLineFlgProperty = false;
-        //}
-        //else
-        //{
-        //Debug.Log("現在のミミックのフラグは" + m_animator.GetBool("Astonish") + "です");
-        //}
     }
 }

@@ -26,7 +26,6 @@ public class GoblinAttack : MonoBehaviour
         {
             m_handColliderFlg = true; //手の当たり判定を付ける
             m_animator.SetBool("Attack", true); //攻撃アニメーションを開始する
-            Debug.Log(m_animator.GetBool("Attack"));
             m_agent.velocity = Vector3.zero; //攻撃範囲に入ったので、ゴブリンの移動速度を無くす(velocity == 速度)  
         }
     }
@@ -38,7 +37,7 @@ public class GoblinAttack : MonoBehaviour
         {
             m_handColliderFlg = false; //手の当たり判定を無くす
             m_animator.SetBool("Attack", false); //攻撃アニメーションを終了する
-            Debug.Log(m_animator.GetBool("Attack"));
+            m_agent.isStopped = false;
         }
     }
 

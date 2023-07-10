@@ -28,7 +28,6 @@ public class FireShot : MonoBehaviour
             GameObject ball = (GameObject)Instantiate(m_fire, m_appearancePlace.transform.position, Quaternion.identity);
             Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
             ballRigidbody.AddForce(transform.forward * m_moveSpeed);
-
             m_animator.SetBool("Attack", true); //魔法の杖のアタックアニメーションを開始する
 
             m_coolTime = 60 * 12; //クールタイムを設ける
