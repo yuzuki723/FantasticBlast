@@ -27,7 +27,7 @@ public class Ice : MonoBehaviour
     {
         //杖のアニメーター取得
         _cameAnimator = GetComponentInChildren<Animator>().GetComponentInChildren<Animator>();
-    
+
         _drawMarker = GetComponent<DrawMarker>();
     }
 
@@ -57,7 +57,7 @@ public class Ice : MonoBehaviour
             ShotMagicSpecial();
 
             _drawMarker.Draw("_IcePointerPrefab",_IcePointerPrefab,false);
-            
+
             return;
         }
 

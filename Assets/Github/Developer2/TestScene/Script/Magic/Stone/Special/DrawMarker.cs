@@ -1,135 +1,109 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DrawMarker : MonoBehaviour
 {
-    ///<summary>
-    ///魔法が発射されるPrefab
-    ///</summary>
-    [SerializeField, Tooltip("魔法が発射されるPrefab")]
+    /// <summary>
+    /// 魔法として出現するPrefab
+    /// </summary>
+    [SerializeField, Tooltip("魔法として出現するPrefab")]
     private GameObject _MagicShotPrefab;
 
     /// <summary>
-    /// 放物線を構成する線分の数
+    /// マーカーのオブジェクト
     /// </summary>
-    //[SerializeField]
-    private int _segmentCount = 120;
+    private GameObject _makerObject;
 
     /// <summary>
-    /// 放物線を何秒分計算するか(距離)
+    /// マーカーを識別するための変数
     /// </summary>
-    private float _predictionTime =6.0f;
+    private string _makerName;
 
-    ///<summary>
-    ///放物線の開始座標
-    ///</summary>
-    private Vector3 _arcStartPosition;
+    /// <summary>
+    /// マーカーを表示する座標
+    /// </summary>
+    private Vector3 _makerPosition;
 
-    ///<summary>
-    ///放物線の終了座標
-    ///</summary>
-    private Vector3 _arcEndPosition;
+    /// <summary>
+    /// マーカーを表示できる上限距離
+    /// </summary>
+    [SerializeField, Tooltip("マーカーを表示できる上限距離")]
+    private float _makerMaxDistance;
 
+    /// <summary>
+    /// マーカーの座標読み取り
+    /// </summary>
     public Vector3 GetMakerPosition
     {
-        get { return _arcEndPosition; }
+        get { return _makerPosition; }
     }
-    
-    /// <summary>
-    /// 着弾点のマーカーのオブジェクト
-    /// </summary>
-    private GameObject _pointerObject;
 
-    private string _objectName;
-
-    public void Draw(string objectName,GameObject makerPrefab,bool Flg = true)
+    private void Awake()
     {
-        //プレハブが違うのであれば別のプレハブに変える
-        if (objectName != _objectName)
-        {
-            //今表示するプレハブを記憶する
-            _objectName = objectName;
+        _makerObject   = null;
+        _makerName     = string.Empty;
+        _makerPosition = Vector3.zero;
+    }
 
-            //プレハブをインスタンス
-            _pointerObject = Instantiate(makerPrefab,Vector3.zero,Quaternion.identity);
-            _pointerObject.SetActive(false);
+    /// <summary>
+    /// 目線の先にマーカーを表示する
+    /// </summary>
+    /// <param name="makerName">マーカーを識別するための名前</param>
+    /// <param name="makerPrefab">マーカーのプレハブ</param>
+    /// <param name="flg">マーカーを表示するかどうか</param>
+    public void Draw(string makerName,GameObject makerPrefab,bool flg = true)
+    {
+        // 現在保存しているnameと比較して違っていたら表示するプレハブを変更する
+        if (makerName != _makerName)
+        {
+            // 今後表示するプレハブのnameを記憶する
+            _makerName = makerName;
+
+            // プレハブをインスタンス
+            _makerObject = Instantiate(makerPrefab,Vector3.zero,Quaternion.identity);
         }
 
-        //マーカーの回転をプレイヤーと同じにする(常に正面を向く)
-        _pointerObject.transform.rotation = transform.rotation;
-        
-        //放物線の開始座標を更新
-        _arcStartPosition = _MagicShotPrefab.transform.position;
+        // マーカーの回転をプレイヤーと同じにする(常に正面を向く)
+        _makerObject.transform.rotation = transform.rotation;
 
-        //放射線を表示
-        float timeStep = _predictionTime;
-        bool draw = false;
-        float hitTime = float.MaxValue;
-        for (int i = 0; i < _segmentCount; i++)
-        {
-            //線の座標を更新
-            float startTime = timeStep * i;
-            float endTime = startTime + timeStep;
-
-            //衝突判定
-            if (!draw)
-            {
-                hitTime = GetArcHitTime(startTime,endTime);
-                if (hitTime != float.MaxValue)
-                {
-                    //衝突したらその先の放射物は表示しない
-                    draw = true;
-                }
-            }
-        }
-
-        //マーカーの表示    
-        if (hitTime != float.MaxValue)
-        {
-            float distance = hit.distance;
-            Vector3 hitPos = _startPosition + (_MagicShotPrefab.transform.forward * distance);
-            _arcEndPosition = hitPos;
-            ShowPointer(hitPos, Flg);
-    }
-
-    /// <summary>
-    /// 指定時間に対するアーチの放物線上の座標を返す
-    /// </summary>
-    /// <param name="time">経過時間</param>
-    /// <returns>座標</returns>
-    private Vector3 GetArcPositionAtTime(float time)
-    {
-        return (_arcStartPosition + ((_MagicShotPrefab.transform.forward * time)));
-    }
-
-    /// <summary>
-    /// 指定座標にマーカーを表示
-    /// </summary>
-    private void ShowPointer(Vector3 position, bool Flg)
-    {
-        _pointerObject.transform.position = position;
-        _pointerObject.gameObject.SetActive(Flg);
-    }
-
-    /// <summary>
-    /// 2点間の線分で衝突判定し、衝突する時間を返す
-    /// </summary>
-    /// <returns>衝突した時間(してない場合はfloat.MaxValue)</returns>
-    private float GetArcHitTime(float startTime, float endTime)
-    {
-        //Linecastする線分の始終点の座標
-        Vector3 startPosition = GetArcPositionAtTime(startTime);
-        Vector3 endPosition = GetArcPositionAtTime(endTime);
-
-        //衝突判定
+        // 目線に向かってレイを飛ばし、設定値より距離が短ければマーカーを表示する
         RaycastHit hitInfo;
-        if (Physics.Linecast(startPosition,endPosition,out hitInfo))
+        Physics.Raycast(_MagicShotPrefab.transform.position, _MagicShotPrefab.transform.forward, out hitInfo);
+        if (hitInfo.distance <= _makerMaxDistance)
         {
-            //衝突したColliderまで距離から実際の衝突時間を算出
-            float distance = Vector3.Distance(startPosition,endPosition);
-            return startTime + (endTime - startTime) * (hitInfo.distance / distance);
+            // 着弾点の座標を求める
+            _makerPosition = CalculateImpactPosition(hitInfo.distance);
+
+            // マーカーを表示する
+            ShowPointer(_makerPosition, flg);
         }
-        return float.MaxValue;
+        else
+        {
+            // 設定値より遠いなら表示しない
+            ShowPointer(_makerPosition, false);
+        }
+    }
+
+    /// <summary>
+    /// 指定された座標にマーカーを表示
+    /// </summary>
+    /// <param name="position">マーカーを表示する座標</param>
+    /// <param name="flg">マーカーを表示するかどうか</param>
+    private void ShowPointer(Vector3 position, bool flg)
+    {
+        _makerObject.transform.position = position;
+        _makerObject.gameObject.SetActive(flg);
+    }
+
+    /// <summary>
+    /// 着弾点の座標を求める
+    /// </summary>
+    /// <param name="distance">着弾点までの距離</param>
+    /// <returns>着弾点の座標</returns>
+    private Vector3 CalculateImpactPosition(float distance)
+    {
+        return _MagicShotPrefab.transform.position + _MagicShotPrefab.transform.forward * distance;
     }
 }

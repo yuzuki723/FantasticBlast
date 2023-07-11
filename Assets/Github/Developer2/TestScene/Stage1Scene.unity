@@ -1714,8 +1714,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7284b2552adab4792d5c03d39efc77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerMaxHP: 0
-  m_slider: {fileID: 0}
+  m_playerMaxHP: 500
+  m_slider: {fileID: 1312141208}
 --- !u!114 &1485089743
 MonoBehaviour:
   m_ObjectHideFlags: 0
