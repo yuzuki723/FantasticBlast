@@ -87,17 +87,10 @@ public class DrawMarker : MonoBehaviour
         //マーカーの表示    
         if (hitTime != float.MaxValue)
         {
-            Vector3 hitPosition = GetArcPositionAtTime(hitTime);
-            _arcEndPosition = hitPosition;
-            ShowPointer(hitPosition,Flg);
-        }
-
-        //衝突判定
-        // RaycastHit hit;
-        // if (Physics.Raycast(_MagicShotPrefab.transform.position,transform.forward.normalized,out hit,60))
-        // {
-        //     Vector3 targetPos = _MagicShotPrefab.transform.position + (transform.forward.normalized * hit.distance);
-        // }
+            float distance = hit.distance;
+            Vector3 hitPos = _startPosition + (_MagicShotPrefab.transform.forward * distance);
+            _arcEndPosition = hitPos;
+            ShowPointer(hitPos, Flg);
     }
 
     /// <summary>
