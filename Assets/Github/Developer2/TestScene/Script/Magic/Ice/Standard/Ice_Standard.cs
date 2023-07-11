@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ice_Standard : MonoBehaviour
+public class Ice_Standard : Magic
 {
     //回転
     [SerializeField] float _rotateX;

@@ -53,7 +53,7 @@ public class Stone : MonoBehaviour
     {
         //杖のアニメーター取得
         _cameAnimator = GetComponentInChildren<Animator>().GetComponentInChildren<Animator>();
-    
+
         _drawMarker = GetComponent<DrawMarker>();
     }
 
@@ -90,7 +90,7 @@ public class Stone : MonoBehaviour
             ShotMagicSpecial();
 
             _drawMarker.Draw("_StonePointerPrefab",_StonePointerPrefab,false);
-            
+
             return;
         }
 

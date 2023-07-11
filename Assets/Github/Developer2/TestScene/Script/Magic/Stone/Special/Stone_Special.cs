@@ -14,7 +14,7 @@ public class Stone_Special : MonoBehaviour
     [SerializeField,Tooltip("揺れの強さ")]
     private float _strength = 10;
 
-    
+
 
     void Start()
     {
