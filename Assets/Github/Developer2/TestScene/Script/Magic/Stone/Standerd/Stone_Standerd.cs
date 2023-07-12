@@ -15,24 +15,16 @@ public class Stone_Standerd : MonoBehaviour
     [System.Serializable]
     public class SetFragmentStatus
     {
-        /// <summary>
-        /// 破壊時の破片プレハブ
-        /// </summary>
+        [SerializeField, Tooltip("破壊時の破片プレハブ")]
         public GameObject Prefab;
 
-        /// <summary>
-        /// 飛び散る破片の数
-        /// </summary>
+        [SerializeField, Tooltip("飛び散る破片の数")]
         public float Number;
 
-        /// <summary>
-        /// 飛び散る破片の速さ
-        /// </summary>
+        [SerializeField, Tooltip("飛び散る破片の速さ")]
         public float Speed;
 
-        /// <summary>
-        /// 飛び散る破片が消える時間
-        /// </summary>
+        [SerializeField, Tooltip("飛び散る破片が消える時間")]
         public float DestroyTime;
     }
 
