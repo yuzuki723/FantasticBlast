@@ -1,126 +1,144 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Stone : MonoBehaviour
 {
-    ///<summary>
-    ///通常魔法のPrefab
-    ///</summary>
-    [SerializeField, Tooltip("通常魔法のPrefab")]
-    private GameObject _standerdPrefab;
+    [SerializeField, Tooltip("通常魔法のステータス")]
+    private StandardStatus _standardStatus = new StandardStatus();
+    [System.Serializable]
+    public class StandardStatus
+    {
+        [SerializeField, Tooltip("通常魔法のPrefab")]
+        public GameObject Prefab;
 
-    ///<summary>
-    ///通常魔法の速度
-    ///</summary>
-    [SerializeField, Tooltip("通常魔法の速度")]
-    private float _standerdSpeed = 100;
+        [SerializeField, Tooltip("通常魔法の速度")]
+        public float Speed = 100;
 
-    ///<summary>
-    ///通常魔法の発射間隔
-    ///</summary>
-    private float _standerdInterval = 0.1f;
+        [SerializeField, Tooltip("通常魔法の発射間隔")]
+        public float Interval = 0.1f;
+
+        [SerializeField, Tooltip("通常魔法が消滅するまでの時間")]
+        public float DestoryTime = 1.0f;
+    }
+
+    [SerializeField, Tooltip("通常魔法のステータス")]
+    private SpecialStatus _specialStatus = new SpecialStatus();
+    [System.Serializable]
+    public class SpecialStatus
+    {
+        [SerializeField, Tooltip("特殊魔法のPrefab")]
+        public GameObject Prefab;
+
+        [SerializeField, Tooltip("マーカーのPrefab")]
+        public GameObject MakerPrefab;
+    }
 
     ///<summary>
     ///通常魔法が発射されてどれだけ時間が経過したか記録
     ///</summary>
-    private float _standerdTime = 0.0f;
+    private float _elapsedCastTime = 0.0f;
 
-    ///<summary>
-    ///特殊魔法のPrefab
-    ///</summary>
-    [SerializeField, Tooltip("特殊魔法のPrefab")]
-    private GameObject _specialPrefab;
-
-    ///<summary>
-    ///杖のアニメーター
-    ///</summary>
+    /// <summary>
+    /// 杖のアニメーター
+    /// </summary>
     private Animator _cameAnimator;
 
     /// <summary>
-    /// 着弾マーカーオブジェクトのPrefab
+    /// 視線の先にマーカーを表示
     /// </summary>
-    [SerializeField, Tooltip("着弾マーカーオブジェクトのPrefab")]
-    private GameObject _StonePointerPrefab;
-
-    ///<summary>
-    ///視線の先にマーカーを表示
-    ///</summary>
     private DrawMarker _drawMarker;
 
 
     private void Awake()
     {
-        //杖のアニメーター取得
+        // 杖のアニメーター取得
         _cameAnimator = GetComponentInChildren<Animator>().GetComponentInChildren<Animator>();
 
         _drawMarker = GetComponent<DrawMarker>();
     }
 
+    /// <summary>
+    /// 土魔法実行
+    /// </summary>
     public void ShotStoneMagic()
     {
-        if(Input.GetMouseButton(0) && _standerdTime <= 0.0f)
-        {
-            //魔法発動時の杖の攻撃アニメーション再生
-            _cameAnimator.SetBool("Attack", true);
+        // 左クリックを押している間、魔法を連射する
+        ShotMagicStandard();
 
-            //通常魔法発動
-            ShotMagicStanderd();
-            _standerdTime = _standerdInterval;
+        // 右クリックを長押しで魔法を設置する場所を決めて、離すと魔法が設置される
+        ShotMagicSpecial();
 
-            return;
-        }
-
-        if(_standerdTime > 0.0f)
-        {
-            _standerdTime -=Time.deltaTime;
-        }
-
-
-        if (Input.GetMouseButton(1))
-        {
-            _drawMarker.Draw("_StonePointerPrefab",_StonePointerPrefab);
-        }
-        if(Input.GetMouseButtonUp(1))
-        {
-            //魔法発動時の杖の攻撃アニメーション再生
-            _cameAnimator.SetBool("Attack", true);
-
-            //特殊魔法発動
-            ShotMagicSpecial();
-
-            _drawMarker.Draw("_StonePointerPrefab",_StonePointerPrefab,false);
-
-            return;
-        }
-
-        //魔法を発動していない時はアニメーションさせない
+        // 魔法を発動していない時はアニメーションさせない
         _cameAnimator.SetBool("Attack",false);
     }
 
-    private void ShotMagicStanderd()
+    /// <summary>
+    /// 通常魔法の処理
+    /// </summary>
+    private void ShotMagicStandard()
     {
-        //出現位置
-        Vector3 pos = transform.GetChild(0).GetChild(0).transform.position;
+        // 均一な間隔で魔法を発射するようにする
+        if (Input.GetMouseButton(0) && _elapsedCastTime <= 0.0f)
+        {
+            // 魔法発動時の杖の攻撃アニメーション再生
+            _cameAnimator.SetBool("Attack", true);
 
-        //魔法が出現
-        GameObject magic = (GameObject)Instantiate(_standerdPrefab, pos, Random.rotation);
-        Rigidbody rigidbody = magic.GetComponent<Rigidbody>();
+            // 出現位置
+            Vector3 pos = transform.GetChild(0).GetChild(0).transform.position;
 
-        //プレイヤーの正面に飛ばす
-        rigidbody.AddForce(transform.GetChild(0).GetChild(0).transform.forward * _standerdSpeed);
+            // 魔法を出現させる
+            GameObject magic = (GameObject)Instantiate(_standardStatus.Prefab, pos, Random.rotation);
 
-        Destroy(magic,1.0f);
+            // プレイヤーの正面に飛ばす
+            Rigidbody rigidbody = magic.GetComponent<Rigidbody>();
+            rigidbody.AddForce(transform.GetChild(0).GetChild(0).transform.forward * _standardStatus.Speed);
+
+            // 1秒後に消滅する
+            Destroy(magic, _standardStatus.DestoryTime);
+
+            // 連射防止のためインターバルを設ける
+            _elapsedCastTime = _standardStatus.Interval;
+        }
+
+        //時間を減らしていき、０になったら魔法を打てるようにする
+        if (_elapsedCastTime > 0.0f)
+        {
+            _elapsedCastTime -= Time.deltaTime;
+        }
     }
 
+    /// <summary>
+    /// 特殊魔法の処理
+    /// </summary>
     private void ShotMagicSpecial()
     {
-        //位置
-        Vector3 startPos = _drawMarker.GetMakerPosition;
-        startPos.y -= 2.0f;
+        // 右クリックを押している間はマーカーが表示され、設置する箇所を決めることができる
+        if (Input.GetMouseButton(1))
+        {
+            _drawMarker.Draw("StoneMaker", _specialStatus.MakerPrefab);
+        }
 
-        //岩を生成
-        Instantiate(_specialPrefab,startPos,transform.rotation);
+        // 右クリックを離すとマーカーが消えて、その場所に魔法が出現する
+        if (Input.GetMouseButtonUp(1))
+        {
+            // 魔法発動時の杖の攻撃アニメーション再生
+            _cameAnimator.SetBool("Attack", true);
 
+            // マーカーを非表示にする
+            _drawMarker.Draw("StoneMaker", _specialStatus.MakerPrefab, false);
+
+            // もし、魔法を設置できない箇所にマーカーが置かれてきた場合
+            // 魔法は出現しない
+            if (_drawMarker.IsPlacement != true) return;
+
+            // 魔法は下から徐々に出現するので、座標を少し下げる
+            Vector3 startPos = _drawMarker.GetMakerPosition;
+            startPos.y -= 2.0f;
+
+            // 魔法を生成
+            Instantiate(_specialStatus.Prefab, startPos, transform.rotation);
+        }
     }
 }

@@ -40,11 +40,19 @@ public class DrawMarker : MonoBehaviour
         get { return _makerPosition; }
     }
 
+    private bool _isPlacement;
+
+    public bool IsPlacement
+    {
+        get { return _isPlacement; }
+    }
+
     private void Awake()
     {
         _makerObject   = null;
         _makerName     = string.Empty;
         _makerPosition = Vector3.zero;
+        _isPlacement = false;
     }
 
     /// <summary>
@@ -77,13 +85,15 @@ public class DrawMarker : MonoBehaviour
             _makerPosition = CalculateImpactPosition(hitInfo.distance);
 
             // マーカーを表示する
-            ShowPointer(_makerPosition, flg);
+            _isPlacement = true;
         }
         else
         {
             // 設定値より遠いなら表示しない
-            ShowPointer(_makerPosition, false);
+            _isPlacement = false;
         }
+
+        ShowPointer(_makerPosition, _isPlacement);
     }
 
     /// <summary>

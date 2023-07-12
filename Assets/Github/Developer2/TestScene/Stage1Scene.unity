@@ -1563,6 +1563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _MagicShotPrefab: {fileID: 220775824}
+  _makerMaxDistance: 10
 --- !u!114 &1485089734
 MonoBehaviour:
   m_ObjectHideFlags: 0
