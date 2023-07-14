@@ -42,8 +42,6 @@ public class Ice_Standard : Magic
 
     private void Start()
     {
-        //何も衝突せず、3秒が経過したらその場で消滅する
-        Destroy(gameObject,3);
     }
 
     void Update()

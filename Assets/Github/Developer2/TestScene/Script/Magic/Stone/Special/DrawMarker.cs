@@ -63,6 +63,13 @@ public class DrawMarker : MonoBehaviour
     /// <param name="flg">マーカーを表示するかどうか</param>
     public void Draw(string makerName,GameObject makerPrefab,bool flg = true)
     {
+        // falseならマーカーを非表示にする
+        if (flg != true)
+        {
+            _makerObject.SetActive(flg);
+            return;
+        }
+
         // 現在保存しているnameと比較して違っていたら表示するプレハブを変更する
         if (makerName != _makerName)
         {
@@ -93,6 +100,10 @@ public class DrawMarker : MonoBehaviour
             _isPlacement = false;
         }
 
+        if (IsGroundFlat() != true)
+        {
+            _isPlacement = false;
+        }
         ShowPointer(_makerPosition, _isPlacement);
     }
 
@@ -115,5 +126,21 @@ public class DrawMarker : MonoBehaviour
     private Vector3 CalculateImpactPosition(float distance)
     {
         return _MagicShotPrefab.transform.position + _MagicShotPrefab.transform.forward * distance;
+    }
+
+    private bool IsGroundFlat()
+    {
+        Vector3[] checkPos = { new Vector3(1, 0, 0), new Vector3(-1, 0, 0), new Vector3(0, 0, 1), new Vector3(0, 0, -1) };
+        for (int i = 0; i < 4; i++)
+        {
+            RaycastHit hit;
+            Physics.Raycast(_makerObject.transform.position + checkPos[i], new Vector3(0, -1, 0), out hit);
+            hit.GetType();
+            if (hit.distance >= 1)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
