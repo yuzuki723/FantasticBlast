@@ -6,11 +6,11 @@ public class Ice_Special_Maker : MonoBehaviour
 {
     void Start()
     {
-        
+
     }
 
     void Update()
     {
-        transform.Translate(0, 2, 0, Space.Self);
+        //transform.Translate(0, 2, 0, Space.Self);
     }
 }

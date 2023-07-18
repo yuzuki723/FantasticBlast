@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// 土魔法クラス
+/// </summary>
 public class Stone : MonoBehaviour
 {
     [SerializeField, Tooltip("通常魔法のステータス")]

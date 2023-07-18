@@ -70,7 +70,7 @@ public class Fire : MonoBehaviour
 
 
         //魔法を発動していない時はアニメーションさせない
-        _cameAnimator.SetBool("Attack",false);
+        //_cameAnimator.SetBool("Attack",false);
     }
 
     private void ShotMagicStanderd()
